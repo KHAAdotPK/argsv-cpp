@@ -10,6 +10,13 @@ This argsv-cpp is capable of handling short and long commands. It is capable of 
 
 The repository contains an example application. Please use it to understand how to use and work with argsv-cpp to process command line arguments.  
 
+## Dependencies...
+
+- github.com/KHAAdotPK/parser.git
+- github.com/KHAAdotPK/string.git
+- github.com/KHAAdotPK/csv.git
+- github.com/KHAAdotPK/ala_exception.git
+
 # Usage
 
 ```C++
