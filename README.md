@@ -125,3 +125,7 @@ int main(int argc, char *argv[])
 }  
 ```
 
+### License
+This project is licensed under a license, the copy of which can be found in file - see the file named LICENSE for details.
+
+
