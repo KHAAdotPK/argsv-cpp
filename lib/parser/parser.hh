@@ -8,8 +8,13 @@
 #ifndef		CC_TOKENIZER_ARGSV_CPP_PARSER_HH
 #define		CC_TOKENIZER_ARGSV_CPP_PARSER_HH
 
+#ifndef HELP_STR_START
 #define HELP_STR_START    "("
+#endif
+#ifndef HELP_STR_END
 #define HELP_STR_END      ")"
+#endif
+
 #define ALL               "ALL"
 
 /* 
