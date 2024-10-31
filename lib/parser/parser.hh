@@ -273,18 +273,28 @@ typedef ARG* ARG_PTR;
                                     /* code */\
                                     for (cc_tokenizer::string_character_traits<char>::int_type i = 1; i <= p.get_total_number_of_lines(); i++)\
                                     {\
+                                        /*std::cout<< "-->>>>> " << p.get_total_number_of_lines() << std::endl;*/\
+                                        /*std::cout<< p.get_line_by_number(i).c_str() << std::endl;*/\
                                         cc_tokenizer::string_character_traits<char>::int_type ith = 0;\
                                         p.get_line_by_number(i);\
                                         GET_TOTAL_NUMBER_OF_TOKENS(p, ith);\
                                         for (cc_tokenizer::string_character_traits<char>::int_type j = 1; j <= p.get_total_number_of_tokens(); j++)\
                                         {\
-                                            if (p.get_token_by_number(j).compare(t) == 0)\
+                                            cc_tokenizer::string_character_traits<char>::size_type pos = p.get_token_by_number(j).find(HELP_STR_START);\
+                                            if (pos == cc_tokenizer::String<char>::npos)\
                                             {\
-                                                /*cc_tokenizer::string_character_traits<char>::int_type ith = 0;*/\
-                                                /*GET_TOTAL_NUMBER_OF_TOKENS(p, ith);*/\
-                                                /* ln =, tn =  p.get_total_number_of_tokens() */\
-                                                *ptr = {0, 0, 0, NULL, NULL, i, /*p.get_total_number_of_tokens()*/ ith};\
-                                                break;\
+                                                if (p.get_token_by_number(j).compare(t) == 0)\
+                                                {\
+                                                    /*cc_tokenizer::string_character_traits<char>::int_type ith = 0;*/\
+                                                    /*GET_TOTAL_NUMBER_OF_TOKENS(p, ith);*/\
+                                                    /* ln =, tn =  p.get_total_number_of_tokens() */\
+                                                    *ptr = {0, 0, 0, NULL, NULL, i, /*p.get_total_number_of_tokens()*/ ith};\
+                                                    break;\
+                                                }\
+                                            }\
+                                            else\
+                                            {\
+                                                j = p.get_total_number_of_tokens() + 1;\
                                             }\
                                         }\
                                         if (ptr->ln && ptr->tn /* provided token was valid command line option */)\
