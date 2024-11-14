@@ -1,5 +1,5 @@
 **argsv-cpp**    
-_README, last updated on :- 19th of November, 2023_
+_README, last updated on :- 14th of November, 2024_
 
 argsv for C++. An effort to process the command line arguments with ease and style.
 ---
