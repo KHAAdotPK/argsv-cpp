@@ -30,9 +30,35 @@ typedef struct arg
     struct arg* previous; // link to list
     struct arg* next; // link to list
     cc_tokenizer::string_character_traits<char>::int_type ln; // line number 
-    cc_tokenizer::string_character_traits<char>::int_type tn; // token number    
+    cc_tokenizer::string_character_traits<char>::int_type tn; // token number
+
+    arg(void) : i(0), j(0), argc(0), previous(NULL), next(NULL), ln(0), tn(0) 
+    {
+
+    }
+
+    arg(cc_tokenizer::string_character_traits<char>::size_type i, cc_tokenizer::string_character_traits<char>::size_type j, int argc, struct arg* previous, struct arg* next,cc_tokenizer::string_character_traits<char>::int_type ln, cc_tokenizer::string_character_traits<char>::int_type tn) : i(i), j(j), argc(argc), previous(previous), next(next), ln(ln), tn(tn)
+    {
+
+    }
+
+    arg& operator = (arg& other)
+    {
+        this->argc = other.argc;
+        this->i = other.i;
+        this->j = other.j;
+        this->next = other.next;
+        this->previous = other.previous;
+        this->ln = other.ln;
+        this->tn = other.tn;
+
+        return *this;
+    }
+
 } ARG;
 typedef ARG* ARG_PTR;
+//typedef arg ARG;
+//typedef arg* ARG_PTR;
 
 
 /* 
@@ -60,20 +86,20 @@ typedef ARG* ARG_PTR;
 #define GET_FIRST_ARG_INDEX(a, n, p, r) {\
                                             int j=n;\
                                             ARG* ptr = &r;\
-                                            *ptr = {1, 0, 0, NULL, NULL, 0, 0};\
+                                            *ptr = ARG{0, 0, 0, NULL, NULL, 0, 0};\
                                             p.reset(LINES);\
                                             p.reset(TOKENS);\
                                             while (p.go_to_next_line() != cc_tokenizer::string_character_traits<char>::eof())\
                                             {\
-                                                while (p.go_to_next_token() != cc_tokenizer::string_character_traits<char>::eof())\
+                                                while (p.go_to_next_token() != cc_tokenizer::string_character_traits<char>::eof() && p.get_current_token().find(HELP_STR_START, 0) == cc_tokenizer::String<char>::npos)\
                                                 {\
-                                                    for (int i = 1; i < argc; i++)\
+                                                    for (int i = 1; i < n; i++)\
                                                     {\
-                                                       if (p.get_current_token().compare(a[i]) == 0)\
+                                                       if (!p.get_current_token().compare(a[i]))\
                                                        {\
                                                             if (j > i)\
                                                             {\
-                                                                j = i;\
+                                                                j = (i - 1);\
                                                             }\
                                                        }\
                                                     }\
@@ -106,7 +132,7 @@ typedef ARG* ARG_PTR;
                                       bool found = false;\
                                       ARG* ptr = &r;\
                                       /* previous, next */\
-                                      *ptr = {0, 0, 0, NULL, NULL, 0, 0};\
+                                      *ptr = ARG{0, 0, 0, NULL, NULL, 0, 0};\
                                       p.reset(LINES);\
                                       p.reset(TOKENS);\
                                       while (p.go_to_next_line() != cc_tokenizer::string_character_traits<char>::eof())\
@@ -115,7 +141,7 @@ typedef ARG* ARG_PTR;
                                           /*std::cout<<p.get_current_line_number()<<" -> "<<p.get_current_line().c_str()<<std::endl;*/\
                                           while (p.go_to_next_token() != cc_tokenizer::string_character_traits<char>::eof() && p.get_current_token().find(HELP_STR_START, 0) == cc_tokenizer::String<char>::npos)\
                                           {\
-                                              if (p.get_current_token().compare(b) == 0)\
+                                              if (!p.get_current_token().compare(b))\
                                               {\
                                                   ptr->ln = p.get_current_line_number();\
                                                   /*ptr->tn = p.get_current_token_number();*/\
@@ -149,7 +175,7 @@ typedef ARG* ARG_PTR;
                                                        if (found == false)\
                                                        {\
                                                            ptr->next = (ARG*)alloc_obj.allocate(sizeof(ARG));\
-                                                           *(ptr->next) = {i, 0, 0, ptr, NULL, p.get_current_line_number(), p.get_current_token_number()};\
+                                                           *(ptr->next) = ARG{i, 0, 0, ptr, NULL, p.get_current_line_number(), p.get_current_token_number()};\
                                                            ptr = ptr->next;\
                                                        }\
                                                        else if (found == true)\
@@ -183,11 +209,11 @@ typedef ARG* ARG_PTR;
                                             p.reset(TOKENS);\
                                             while (p.go_to_next_line() != cc_tokenizer::string_character_traits<char>::eof())\
                                             {\
-                                                while (p.go_to_next_token() != cc_tokenizer::string_character_traits<char>::eof())\
+                                                while (p.go_to_next_token() != cc_tokenizer::string_character_traits<char>::eof() && p.get_current_token().find(HELP_STR_START, 0) == cc_tokenizer::String<char>::npos)\
                                                 {\
                                                     for (int i = ptr->i + 1; i < n; i++)\
                                                     {\
-                                                        if (p.get_current_token().compare(a[i]) == 0)\
+                                                        if (!p.get_current_token().compare(a[i]))\
                                                         {\
                                                             if (!ptr->j)\
                                                             {\
@@ -219,7 +245,7 @@ typedef ARG* ARG_PTR;
  */
 #define HELP(p, r, t)     {\
                                 ARG* ptr = &r;\
-                                *ptr = {0, 0, 0, NULL, NULL, 0, 0};\
+                                *ptr = ARG{0, 0, 0, NULL, NULL, 0, 0};\
                                 cc_tokenizer::String<char> str = cc_tokenizer::String<char>(t);\
                                 cc_tokenizer::allocator<char> alloc_obj;\
                                 str.toUpper();\
@@ -236,7 +262,7 @@ typedef ARG* ARG_PTR;
                                             if (ptr->ln && ptr->tn)\
                                             {\
                                                 ptr->next = (ARG*)alloc_obj.allocate(sizeof(ARG));\
-                                                *(ptr->next) = {0, 0, 0, ptr, NULL, 0, 0};\
+                                                *(ptr->next) = ARG{0, 0, 0, ptr, NULL, 0, 0};\
                                                 ptr = ptr->next;\
                                             }\
                                             ptr->i = cc_tokenizer::String<char>(HELP_STR_START).size();\
@@ -288,7 +314,7 @@ typedef ARG* ARG_PTR;
                                                     /*cc_tokenizer::string_character_traits<char>::int_type ith = 0;*/\
                                                     /*GET_TOTAL_NUMBER_OF_TOKENS(p, ith);*/\
                                                     /* ln =, tn =  p.get_total_number_of_tokens() */\
-                                                    *ptr = {0, 0, 0, NULL, NULL, i, /*p.get_total_number_of_tokens()*/ ith};\
+                                                    *ptr = ARG{0, 0, 0, NULL, NULL, i, /*p.get_total_number_of_tokens()*/ ith};\
                                                     break;\
                                                 }\
                                             }\
