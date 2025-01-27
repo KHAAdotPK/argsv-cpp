@@ -97,7 +97,8 @@ typedef ARG* ARG_PTR;
                                                     {\
                                                        if (!p.get_current_token().compare(a[i]))\
                                                        {\
-                                                            if (j > i)\
+                                                            /*std::cout<< "----> " << a[i] << " j = " << j << ", i = " << i << std::endl;*/\
+                                                            if (j >= i)\
                                                             {\
                                                                 j = (i - 1);\
                                                             }\
