@@ -196,6 +196,13 @@ typedef ARG* ARG_PTR;
                                       }\
                                   }\
 
+/*
+ * This macro, FIND_ARG_BLOCK, can be safely used even if ptr->i is zero.
+ * The macro iterates through a list of arguments and updates the structure
+ * pointed to by ptr based on the conditions specified. The loop ensures that
+ * even if ptr->i is zero, the macro will still function correctly without
+ * causing any out-of-bounds errors or undefined behavior.
+ */
 /* 
     a = argv
     n = argc
